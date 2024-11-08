@@ -1,22 +1,21 @@
 import React from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { auth } from "./firebase"; 
+import { Link } from "react-router-dom";
+import { auth } from "./firebase";
 import { signOut } from "firebase/auth";
 import './navbar.css';
 
-const NavBAR = () =>{
+const NavBAR = ({ user }) => {
 
-    const navigate = useNavigate();
-
-    const handleSignOut = async () => {
+    const handleLogout = async () => {
         try {
             await signOut(auth);
-            navigate("/login"); // Redirect to login after signing out
+            alert("You're signed out");
         } catch (error) {
             console.error("Error signing out:", error.message);
         }
     };
-    return(
+
+    return (
         <nav className="navbar">
             <div className="navbar-top">DEV@Deakin</div>
             <input 
@@ -26,13 +25,14 @@ const NavBAR = () =>{
             />
             <div className="link">
                 <button className="post">Post</button>
-                <Link to="/login">
-                    <button className="post">Log In</button>
-                </Link>
-                <button className="post" onClick={handleSignOut}>Sign Out</button>
+                {!user ? (
+                    <Link to="/login" className="post" style={{ textDecoration: 'none' }}>Log In</Link>
+                ) : (
+                    <button className="post" onClick={handleLogout}>Logout</button>
+                )}
             </div>
         </nav>
     );
-}
+};
 
 export default NavBAR;
